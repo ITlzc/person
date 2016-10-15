@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<canvas width="800" height="600" id="cvs"></canvas>
+<script src="loadImages.js"></script>
+<script src="rect.js"></script>
+<script src="bird.js"></script>
+<script>
+    var cvs = document.getElementById('cvs');
+    var ctx = cvs.getContext('2d');
+    var imgUrls = [
+        {name: 'birds', path: './res/birds.png'},
+        {name: 'land', path: './res/land.png'},
+        {name: 'pipe1', path: './res/pipe1.png'},
+        {name: 'pipe2', path: './res/pipe2.png'},
+        {name: 'sky', path: './res/sky.png'},
+    ];
+    loadImages(imgUrls, function (imgEls) {
+        // 主逻辑：分为两部分
+        //      1. 创建对象
+        // TODO: 创建小鸟的对象
+        var bird = new Bird(150, 150, imgEls.birds, 0, 0.0001);
+
+        // ---------------------------------------------
+        //      2. 主循环
+        // 取间隔时间
+        var lastTime = Date.now();
+        // 同样是延迟执行，但是延迟的时间由浏览器来决定：浏览器会尽量让这个延迟时间符合流畅的动画的标准
+        var looper = function () {
+            var now = Date.now();
+            var dt = now - lastTime; // 间隔时间
+            lastTime = now;
+
+            ctx.clearRect(0, 0, 800, 600); // 每帧开始都要把上一帧的图像擦除
+
+            // TODO：调用小鸟的update和draw函数，让小鸟动起来
+            bird.update(dt);
+            bird.draw();
+
+            // ---------------------------------------------
+            // 我们需要这个函数被反复的执行
+            requestAnimationFrame(looper); // 这个函数执行到最后：会再次延迟执行自身
+        };
+        requestAnimationFrame(looper)
+
+    })
+
+
+</script>
+</body>
+</html>
